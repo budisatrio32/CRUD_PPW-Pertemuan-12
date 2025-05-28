@@ -1,0 +1,210 @@
+:root {
+    --primary-red: #dc3545;
+    --dark-bg: #1a1a1a;
+    --darker-bg: #0d0d0d;
+}
+
+body {
+    background: linear-gradient(135deg, var(--primary-red) 0%, #a61e1e 100%);
+    min-height: 100vh;
+    font-family: 'Urbanist', sans-serif;
+    color: white;
+    position: relative;
+    padding: 2rem 0;
+}
+
+/* Background pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+/* Back Button */
+.back-button {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.back-button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateX(-5px);
+    color: white;
+}
+
+/* Main Container */
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem 3rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: calc(100vh - 4rem);
+}
+
+.form-section {
+    flex: 1;
+    max-width: 500px;
+}
+
+/* Page Title */
+.page-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 4rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Form Container */
+.form-wrapper {
+    background: white;
+    border-radius: 25px;
+    padding: 3rem;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+/* Form Elements */
+.form-label {
+    font-weight: 700;
+    color: var(--primary-red);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border: 2px solid var(--primary-red);
+    border-radius: 25px;
+    padding: 15px 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.25);
+    background: white;
+    color: #333;
+}
+
+.form-control::placeholder {
+    color: #999;
+}
+
+/* File Upload */
+.file-upload-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.file-upload-btn {
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.file-upload-input {
+    display: none;
+}
+
+/* Submit Button */
+.btn-submit {
+    background: var(--primary-red);
+    border: none;
+    border-radius: 25px;
+    padding: 15px 40px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-submit:hover {
+    background: #c82333;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(220,53,69,0.4);
+}
+
+/* Helper Text */
+.helper-text {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* Info Box */
+.info-box {
+    background: #e7f3ff;
+    border: 1px solid #b8daff;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    color: #004085;
+}
+
+.info-box h6 {
+    color: var(--primary-red);
+    margin-bottom: 0.5rem;
+}
+
+.info-box ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.info-box li {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
