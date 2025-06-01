@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="style_index.css">
 </head>
 <body>
+    <?php
+    include_once("config.php");
+    requireLogin(); // Redirect ke login jika belum login
+    ?>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: rgba(13,13,13,0.95); backdrop-filter: blur(10px);">
         <div class="container">
@@ -44,6 +48,11 @@
                     </li>
                 </ul>
                 <a href="daftar_tim.php" class="btn btn-primary-custom ms-3">Lihat Daftar Tim</a>
+            </div>
+            <div class="navbar-nav ms-3">
+                <a href="logout.php" onclick="return confirm('Yakin logout?')">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
             </div>
         </div>
     </nav>

@@ -1,4 +1,8 @@
 <?php
+
+include_once("config.php");
+requireLogin(); // Redirect ke login jika belum login
+
 include 'config.php';
 
 // Cek apakah ada ID yang dikirimkan

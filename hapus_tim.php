@@ -1,4 +1,8 @@
 <?php
+
+include_once("config.php");
+requireLogin(); // Redirect ke login jika belum login
+
 // Include file koneksi database
 include_once("config.php");
 

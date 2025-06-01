@@ -19,6 +19,10 @@
     <link rel="stylesheet" href="style_daftar_tim.css">
 </head>
 <body>
+    <?php
+    include_once("config.php");
+    requireLogin(); // Redirect ke login jika belum login
+    ?>
     <!-- Header -->
     <header class="page-header">
         <div class="container">
