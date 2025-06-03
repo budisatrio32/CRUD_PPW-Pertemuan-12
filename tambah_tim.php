@@ -1,19 +1,17 @@
 <?php
 
 include_once("config.php");
-requireLogin(); // Redirect ke login jika belum login
+requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'config.php';
 
-    // Ambil dan bersihkan input
     $id_tim = mysqli_real_escape_string($conn, strtoupper(trim($_POST['id_tim'])));
     $id_liga = mysqli_real_escape_string($conn, strtoupper(trim($_POST['id_liga'])));
     $id_stadion = mysqli_real_escape_string($conn, strtoupper(trim($_POST['id_stadion'])));
     $nama_tim = mysqli_real_escape_string($conn, trim($_POST['nama_tim']));
     $pelatih = mysqli_real_escape_string($conn, trim($_POST['pelatih']));
 
-    // Validasi input
     $errors = [];
     
     if (strlen($id_tim) !== 5) {
@@ -28,47 +26,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "ID Stadion harus 5 karakter!";
     }
 
-    // Cek apakah ID tim sudah ada
     $check_tim = mysqli_query($conn, "SELECT ID_TIM FROM Tim WHERE ID_TIM = '$id_tim'");
     if (mysqli_num_rows($check_tim) > 0) {
         $errors[] = "ID Tim '$id_tim' sudah digunakan!";
     }
 
-    // Cek apakah ID liga ada di database
     $check_liga = mysqli_query($conn, "SELECT ID_LIGA FROM Liga WHERE ID_LIGA = '$id_liga'");
     if (mysqli_num_rows($check_liga) == 0) {
         $errors[] = "ID Liga '$id_liga' tidak ditemukan di database!";
     }
 
-    // Cek apakah ID stadion ada di database
     $check_stadion = mysqli_query($conn, "SELECT ID_STADION FROM Stadion WHERE ID_STADION = '$id_stadion'");
     if (mysqli_num_rows($check_stadion) == 0) {
         $errors[] = "ID Stadion '$id_stadion' tidak ditemukan di database!";
     }
 
-    // Jika error
     if (!empty($errors)) {
         $error_message = implode("\\n", $errors);
         echo "<script>alert('Error:\\n$error_message');</script>";
     } else {
-        // Buat folder uploads jika belum ada
         if (!is_dir('uploads')) {
             mkdir('uploads', 0755, true);
         }
 
-        $logo_name = null; // Default NULL untuk database
+        $logo_name = null;
         
-        // Handle upload logo
         if (!empty($_FILES['logo_tim']['name'])) {
             $logo_tmp = $_FILES['logo_tim']['tmp_name'];
             $file_extension = pathinfo($_FILES['logo_tim']['name'], PATHINFO_EXTENSION);
             
-            // Validasi file type
             $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
             if (!in_array(strtolower($file_extension), $allowed_types)) {
                 echo "<script>alert('Format file tidak diizinkan! Gunakan JPG, PNG, atau GIF.');</script>";
             } else {
-                // Buat nama file unik
                 $unique_name = $id_tim . '_' . time() . '.' . $file_extension;
                 
                 if (move_uploaded_file($logo_tmp, "uploads/$unique_name")) {
@@ -79,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Insert ke database (hanya jika tidak ada error upload)
         if (!isset($error_message)) {
             $query = "INSERT INTO Tim (ID_TIM, ID_LIGA, ID_STADION, LOGO_TIM, NAMA_TIM, PELATIH)
                     VALUES ('$id_tim', '$id_liga', '$id_stadion', " . 
@@ -106,13 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Tambah Tim - ScoreZone</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS untuk Tambah Tim -->
     <link rel="stylesheet" href="style_tambah_tim.css">
 
 </head>

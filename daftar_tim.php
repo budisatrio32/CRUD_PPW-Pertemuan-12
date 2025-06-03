@@ -4,22 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Tim - ScoreZone</title>
-    
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS untuk Daftar Tim -->
     <link rel="stylesheet" href="style_daftar_tim.css">
 
     <style>
-        /* Additional styles for pagination */
         .pagination-custom {
             display: flex;
             justify-content: center;
@@ -79,25 +71,19 @@
 <body>
     <?php
     include_once("config.php");
-    requireLogin(); // Redirect ke login jika belum login
-
-    // Konfigurasi pagination
-    $limit = 10; // Data per halaman
+    requireLogin();
+    $limit = 10; 
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $offset = ($page - 1) * $limit;
-
-    // Konfigurasi search
     $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
     $search_query = '';
     if (!empty($search)) {
         $search_query = "WHERE NAMA_TIM LIKE '%$search%' OR PELATIH LIKE '%$search%' OR ID_TIM LIKE '%$search%' OR ID_LIGA LIKE '%$search%' OR ID_STADION LIKE '%$search%'";
     }
 
-    // Hitung total data
     $count_query = "SELECT COUNT(*) as total FROM tim $search_query";
     $count_result = mysqli_query($conn, $count_query);
     
-    // Cek apakah query berhasil
     if (!$count_result) {
         die("Query gagal: " . mysqli_error($conn));
     }
@@ -105,11 +91,9 @@
     $total_data = mysqli_fetch_assoc($count_result)['total'];
     $total_pages = ceil($total_data / $limit);
 
-    // Query untuk mengambil data dengan pagination
     $query = "SELECT * FROM tim $search_query ORDER BY ID_TIM LIMIT $limit OFFSET $offset";
     $result = mysqli_query($conn, $query);
 
-    // Cek apakah query berhasil
     if (!$result) {
         die("Query gagal: " . mysqli_error($conn));
     }
