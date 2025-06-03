@@ -17,12 +17,104 @@
     
     <!-- Custom CSS untuk Daftar Tim -->
     <link rel="stylesheet" href="style_daftar_tim.css">
+
+    <style>
+        /* Additional styles for pagination */
+        .pagination-custom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        .pagination-custom a, .pagination-custom span {
+            padding: 10px 15px;
+            border: 1px solid #444;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background-color: #2a2a2a;
+        }
+        .pagination-custom a:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+        .pagination-custom .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .search-section {
+            margin-bottom: 20px;
+        }
+        .search-box {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #333;
+        }
+        .search-box::placeholder {
+            color: #ccc;
+        }
+        .stats-info {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
     <?php
     include_once("config.php");
     requireLogin(); // Redirect ke login jika belum login
+
+    // Konfigurasi pagination
+    $limit = 10; // Data per halaman
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $limit;
+
+    // Konfigurasi search
+    $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+    $search_query = '';
+    if (!empty($search)) {
+        $search_query = "WHERE NAMA_TIM LIKE '%$search%' OR PELATIH LIKE '%$search%' OR ID_TIM LIKE '%$search%' OR ID_LIGA LIKE '%$search%' OR ID_STADION LIKE '%$search%'";
+    }
+
+    // Hitung total data
+    $count_query = "SELECT COUNT(*) as total FROM tim $search_query";
+    $count_result = mysqli_query($conn, $count_query);
+    
+    // Cek apakah query berhasil
+    if (!$count_result) {
+        die("Query gagal: " . mysqli_error($conn));
+    }
+    
+    $total_data = mysqli_fetch_assoc($count_result)['total'];
+    $total_pages = ceil($total_data / $limit);
+
+    // Query untuk mengambil data dengan pagination
+    $query = "SELECT * FROM tim $search_query ORDER BY ID_TIM LIMIT $limit OFFSET $offset";
+    $result = mysqli_query($conn, $query);
+
+    // Cek apakah query berhasil
+    if (!$result) {
+        die("Query gagal: " . mysqli_error($conn));
+    }
     ?>
+    
     <!-- Header -->
     <header class="page-header">
         <div class="container">
@@ -52,24 +144,9 @@
                     </a>
                 </div>
                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <?php
-                    include_once('config.php'); // Koneksi database
-
-                    // Query untuk mengambil data tim
-                    $query = "SELECT * FROM tim ORDER BY id_tim";
-                    $result = mysqli_query($conn, $query);
-
-                    // Cek apakah query berhasil
-                    if (!$result) {
-                        die("Query gagal: " . mysqli_error($conn));
-                    }
-
-                    // Hitung jumlah tim
-                    $total_tim = mysqli_num_rows($result);
-                    ?>
                     <span class="text-muted">
                         <i class="bi bi-info-circle me-2"></i>
-                        Total: <strong><?php echo $total_tim; ?> Tim</strong> terdaftar
+                        Total: <strong><?php echo $total_data; ?> Tim</strong> terdaftar
                     </span>
                 </div>
             </div>
@@ -79,7 +156,34 @@
     <!-- Content -->
     <main class="py-4">
         <div class="container">
-            <?php if($total_tim > 0): ?>
+            <!-- Search Section -->
+            <div class="search-section">
+                <form method="GET" class="row g-3 align-items-center">
+                    <div class="col-md-8">
+                        <input type="text" name="search" class="form-control search-box" 
+                                placeholder="Cari berdasarkan nama tim, pelatih, ID tim, liga, atau stadion..." 
+                                value="<?php echo htmlspecialchars($search); ?>">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-1"></i> Cari
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stats Info -->
+            <div class="stats-info">
+                <div>
+                    <strong>Total Data: <?php echo $total_data; ?></strong>
+                    <?php if (!empty($search)): ?>
+                        <span> | Hasil pencarian untuk: "<em><?php echo htmlspecialchars($search); ?></em>"</span>
+                    <?php endif; ?>
+                </div>
+                <div>Halaman <?php echo $page; ?> dari <?php echo $total_pages; ?></div>
+            </div>
+
+            <?php if(mysqli_num_rows($result) > 0): ?>
                 <!-- Table with Data -->
                 <div class="table-container">
                     <div class="table-responsive">
@@ -98,7 +202,7 @@
                             </thead>
                             <tbody>
                                 <?php 
-                                $no = 1; 
+                                $no = $offset + 1; 
                                 while($row = mysqli_fetch_assoc($result)): 
                                     $id_tim = $row['ID_TIM'];
                                     $id_liga = $row['ID_LIGA'];
@@ -163,12 +267,38 @@
                         </table>
                     </div>
                     
+                    <!-- Pagination -->
+                    <?php if ($total_pages > 1): ?>
+                    <div class="pagination-custom">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?php echo ($page-1); ?>&search=<?php echo urlencode($search); ?>">Previous</a>
+                        <?php endif; ?>
+                        
+                        <?php
+                        $start = max(1, $page - 2);
+                        $end = min($total_pages, $page + 2);
+                        
+                        for ($i = $start; $i <= $end; $i++):
+                        ?>
+                            <?php if ($i == $page): ?>
+                                <span class="current"><?php echo $i; ?></span>
+                            <?php else: ?>
+                                <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?php echo ($page+1); ?>&search=<?php echo urlencode($search); ?>">Next</a>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                    
                     <!-- Table Footer Info -->
                     <div class="row mt-3">
                         <div class="col-12">
                             <small class="text-muted">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Menampilkan <?php echo $total_tim; ?> tim dari database ScoreZone
+                                Menampilkan <?php echo mysqli_num_rows($result); ?> dari <?php echo $total_data; ?> tim dari database ScoreZone
                             </small>
                         </div>
                     </div>
@@ -177,12 +307,27 @@
                 <!-- Empty State -->
                 <div class="empty-state">
                     <i class="bi bi-inbox"></i>
-                    <h4>Belum Ada Data Tim</h4>
-                    <p>Mulai dengan menambahkan tim pertama Anda ke dalam database ScoreZone</p>
+                    <h4>
+                        <?php if (!empty($search)): ?>
+                            Tidak ada data yang ditemukan
+                        <?php else: ?>
+                            Belum Ada Data Tim
+                        <?php endif; ?>
+                    </h4>
+                    <p>
+                        <?php if (!empty($search)): ?>
+                            Tidak ditemukan data tim yang sesuai dengan pencarian "<strong><?php echo htmlspecialchars($search); ?></strong>".
+                            <br><a href="daftar_tim.php" class="btn-secondary-custom mt-2">Tampilkan semua data</a>
+                        <?php else: ?>
+                            Mulai dengan menambahkan tim pertama Anda ke dalam database ScoreZone
+                        <?php endif; ?>
+                    </p>
+                    <?php if (empty($search)): ?>
                     <a href="tambah_tim.php" class="btn-primary-custom">
                         <i class="bi bi-plus-circle me-2"></i>
                         Tambah Tim Pertama
                     </a>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
