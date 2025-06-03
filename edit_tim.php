@@ -1,8 +1,5 @@
 <?php
 
-include_once("config.php");
-requireLogin();
-
 include 'config.php';
 
 if (!isset($_GET['id']) || empty($_GET['id'])) {

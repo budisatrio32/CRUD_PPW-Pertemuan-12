@@ -1,8 +1,5 @@
 <?php
 
-include_once("config.php");
-requireLogin();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'config.php';
 
@@ -117,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="info-box">
                     <h6><i class="bi bi-info-circle"></i> Informasi Data</h6>
                     <ul>
-                        <li><strong>Liga tersedia:</strong> LIG01 (La Liga)</li>
-                        <li><strong>Stadion tersedia:</strong> STD01, STD02, STD03, STD04</li>
+                        <li><strong>Liga tersedia:</strong> LG001-LG009</li>
+                        <li><strong>Stadion tersedia:</strong> ST001-ST176</li>
                         <li><strong>Format ID:</strong> Harus 5 karakter (contoh: TIM05)</li>
                     </ul>
                 </div>
@@ -127,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-4">
                         <label for="id_tim" class="form-label">ID_TIM *</label>
                         <input type="text" class="form-control" id="id_tim" name="id_tim" required 
-                                placeholder="TIM05" maxlength="5" pattern="[A-Z0-9]{5}" 
+                                placeholder="TM001" maxlength="5" pattern="[A-Z0-9]{5}" 
                                 title="5 karakter huruf besar dan angka">
                         <div class="helper-text">5 karakter unik untuk mengidentifikasi tim</div>
                     </div>
@@ -135,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-4">
                         <label for="id_liga" class="form-label">ID_LIGA *</label>
                         <input type="text" class="form-control" id="id_liga" name="id_liga" required 
-                                placeholder="LIG01" maxlength="5" pattern="[A-Z0-9]{5}"
+                                placeholder="LG001" maxlength="5" pattern="[A-Z0-9]{5}"
                                 title="5 karakter huruf besar dan angka">
                         <div class="helper-text">ID liga yang sudah ada di database</div>
                     </div>
@@ -143,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-4">
                         <label for="id_stadion" class="form-label">ID_STADION *</label>
                         <input type="text" class="form-control" id="id_stadion" name="id_stadion" required 
-                                placeholder="STD01" maxlength="5" pattern="[A-Z0-9]{5}"
+                                placeholder="ST001" maxlength="5" pattern="[A-Z0-9]{5}"
                                 title="5 karakter huruf besar dan angka">
                         <div class="helper-text">ID stadion kandang yang sudah ada di database</div>
                     </div>
