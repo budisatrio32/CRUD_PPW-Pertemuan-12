@@ -1,11 +1,19 @@
 <?php
 session_start();
 
+// TAMBAHKAN INI DI PALING ATAS
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', 'error.log');
+
+// ... rest of your code
+
 // Konfigurasi database
 $host = "localhost";
-$username = "root";
-$password = ""; // Sesuaikan dengan password MySQL Anda, biasanya kosong
-$database = "finaljadwalpertandingan"; // Nama database yang Anda buat
+$username = "u985354573_BudiAdmin";
+$password = "#Satr2005"; // Sesuaikan dengan password MySQL Anda, biasanya kosong
+$database = "u985354573_jdwlspkbl"; // Nama database yang Anda buat
 
 // Membuat koneksi
 $conn = mysqli_connect($host, $username, $password, $database);

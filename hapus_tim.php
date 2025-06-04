@@ -8,10 +8,10 @@ include_once("config.php");
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     
-    $check_pemain = mysqli_query($conn, "SELECT COUNT(*) as total FROM Pemain WHERE ID_TIM = '$id'");
+    $check_pemain = mysqli_query($conn, "SELECT COUNT(*) as total FROM pemain WHERE ID_TIM = '$id'");
     $pemain_count = mysqli_fetch_assoc($check_pemain)['total'];
     
-    $check_pertandingan = mysqli_query($conn, "SELECT COUNT(*) as total FROM Pertandingan WHERE ID_HOMETEAM = '$id' OR ID_AWAYTEAM = '$id'");
+    $check_pertandingan = mysqli_query($conn, "SELECT COUNT(*) as total FROM pertandingan WHERE ID_HOMETEAM = '$id' OR ID_AWAYTEAM = '$id'");
     $pertandingan_count = mysqli_fetch_assoc($check_pertandingan)['total'];
     
     if ($pemain_count > 0 || $pertandingan_count > 0) {
@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
                 window.location.href = 'daftar_tim.php';
             </script>";
     } else {
-        $result = mysqli_query($conn, "DELETE FROM Tim WHERE ID_TIM = '$id'");
+        $result = mysqli_query($conn, "DELETE FROM tim WHERE ID_TIM = '$id'");
         
         if ($result) {
             echo "<script>

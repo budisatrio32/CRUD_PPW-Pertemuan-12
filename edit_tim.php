@@ -8,7 +8,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id_tim = mysqli_real_escape_string($conn, $_GET['id']);
 
-$query = "SELECT * FROM Tim WHERE ID_TIM = '$id_tim'";
+$query = "SELECT * FROM tim WHERE ID_TIM = '$id_tim'";
 $result = mysqli_query($conn, $query);
 
 if (mysqli_num_rows($result) == 0) {
@@ -34,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "ID Stadion harus 5 karakter!";
     }
 
-    $check_liga = mysqli_query($conn, "SELECT ID_LIGA FROM Liga WHERE ID_LIGA = '$id_liga'");
+    $check_liga = mysqli_query($conn, "SELECT ID_LIGA FROM liga WHERE ID_LIGA = '$id_liga'");
     if (mysqli_num_rows($check_liga) == 0) {
         $errors[] = "ID Liga '$id_liga' tidak ditemukan di database!";
     }
 
-    $check_stadion = mysqli_query($conn, "SELECT ID_STADION FROM Stadion WHERE ID_STADION = '$id_stadion'");
+    $check_stadion = mysqli_query($conn, "SELECT ID_STADION FROM stadion WHERE ID_STADION = '$id_stadion'");
     if (mysqli_num_rows($check_stadion) == 0) {
         $errors[] = "ID Stadion '$id_stadion' tidak ditemukan di database!";
     }
@@ -77,7 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!isset($error_message)) {
-            $update_query = "UPDATE Tim SET 
+            // 🔥 PERBAIKAN: Ganti "Tim" jadi "tim" (lowercase)
+            $update_query = "UPDATE tim SET 
                             ID_LIGA = '$id_liga',
                             ID_STADION = '$id_stadion',
                             LOGO_TIM = " . ($logo_name ? "'$logo_name'" : "NULL") . ",
